@@ -17,7 +17,7 @@ const Layout =props=>{
     return(
         <Auxillary className={classes.Content}>
             <Toolbar drawerToggleClicked={sideDrawerToggleHandler} />
-            <p>Layout</p>
+            <p>Layoutka</p>
         </Auxillary>
     );
 }
