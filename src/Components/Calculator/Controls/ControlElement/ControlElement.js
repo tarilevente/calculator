@@ -6,8 +6,9 @@ const ControlElement=props=>{
     const bg=props.bg;
     return(
         <div className={classes.ControlElement}
-            // onClick={props.clicked}
-            style={{color:color,backgroundColor:bg}}>
+            onClick={props.clicked}
+            style={{color:color,backgroundColor:bg}}
+            value={props.val}>
             {props.children}
         </div>
     );

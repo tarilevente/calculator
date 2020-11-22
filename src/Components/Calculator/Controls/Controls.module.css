@@ -1,6 +1,6 @@
 .Controls{
-    height:92%;
-    max-height:92%;
+    height:86%;
+    max-height:86%;
     margin: 0 auto;
     padding: 10px;
     box-sizing: border-box;
@@ -9,5 +9,4 @@
     flex-wrap: wrap;
     justify-content: space-around; 
     align-items:stretch;
-
 }

@@ -3,8 +3,13 @@ import classes from './Monitor.module.css';
 
 const Monitor=props=>{
     return(
-        <div className={classes.Monitor}>
-            {/* {props.getAmount} */}
+        <div>
+            <div className={classes.History}>
+                {props.before}
+            </div>
+            <div className={classes.Monitor}>
+                {props.amount}
+            </div>
         </div>
     );
 };
