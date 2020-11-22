@@ -1,13 +1,32 @@
 .ControlElement{
-    margin:5px auto;
+    margin:3px auto;
     padding:8px;
     box-sizing: border-box;
     border: 1px black solid;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-variant: small-caps;
-    width:85px;
+    width:76px;
     font-size: xx-large;
     font-weight: 700;
     text-align: center;
-    line-height: 62px;
+    line-height: 58px;
+    box-shadow: 1px 2px #ccc;
+    flex: 1 0 21%; 
+}
+
+.ControlElement:hover{
+    cursor: pointer;
+}
+
+@media(max-width:550px){
+    .ControlElement{
+        width:50px;
+        font-weight: 500;
+        line-height: 40px;
+        max-height: 80px;
+        margin: 2px auto;
+        padding:4px;
+        flex: 1 0 21%; 
+        font-size: x-large;
+    }
 }

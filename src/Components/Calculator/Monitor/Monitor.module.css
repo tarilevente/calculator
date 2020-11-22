@@ -2,5 +2,26 @@
     height:60px;
     background-color: azure;
     text-align:right;
-    
+    line-height: 60px;
+    font-weight: 700;
+    font-variant: small-caps;
+    color:indigo;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 2rem;
+    padding:0 20px;
+    box-sizing: border-box;
+}
+
+.History{
+    height:30px;
+    background-color: rgb(195, 211, 211);
+    text-align:right;
+    line-height: 30px;
+    font-weight: 400;
+    font-variant: small-caps;
+    color:rgb(59, 3, 99);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 1.4rem;
+    padding:0 20px;
+    box-sizing: border-box;
 }
