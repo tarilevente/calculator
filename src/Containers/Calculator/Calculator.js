@@ -147,7 +147,7 @@ const Calculator =props=>{
     if(!isValidAmount){
         am=amount?amount.toString().substring(0,15).replace(".",",")+'!!!':0;
     };
-    if(!isNumber(amount.toString().replace(",","9"))){am="Hibás számítás!";};
+    if(amount && !isNumber(amount.toString().replace(",","9"))){am="Hibás számítás!";};
     if(!isValidBefore){
         bef=before?before.toString().substring(0,20).replace(".",",")+'!!!':null;
     };
