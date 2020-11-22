@@ -3,7 +3,7 @@ import React from 'react';
 const Calculator =props=>{
 
     return(
-        <p>Calculator!</p>
+        <h1>Calculator!</h1>
     );
 };
 
