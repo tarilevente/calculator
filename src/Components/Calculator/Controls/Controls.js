@@ -113,7 +113,7 @@ const controls={
         },
         COMMA:{
             display:",",
-            val:"&,COMMA",
+            val:",COMMA",
             color:"darkred",
             bg:"honeydew"
         },
