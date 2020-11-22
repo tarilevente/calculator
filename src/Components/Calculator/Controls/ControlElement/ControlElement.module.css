@@ -1,0 +1,13 @@
+.ControlElement{
+    margin:5px auto;
+    padding:8px;
+    box-sizing: border-box;
+    border: 1px black solid;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-variant: small-caps;
+    width:85px;
+    font-size: xx-large;
+    font-weight: 700;
+    text-align: center;
+    line-height: 62px;
+}
