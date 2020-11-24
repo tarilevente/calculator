@@ -33,6 +33,18 @@ const Auth=props=>{
             },
             valid:false,
             touched:false
+        },
+        registration:{
+            elementType:'select',
+            elementConfig:{
+                options:[
+                    {value:'Login', displayValue:'Login'},    
+                    {value:'SignUp', displayValue:'Sign up'}    
+                ]
+            },
+            value:'Login',
+            validation:{},
+            valid:true
         }
     });
 
@@ -49,7 +61,11 @@ const Auth=props=>{
 
     const submitHandler=(event)=>{
         event.preventDefault();
-        console.log('onAuth: '+authForm.email.value+' '+authForm.password.value);
+        if(authForm.registration.value==='Login'){
+            //Login
+        }else if(authForm.registration.value==='SignUp'){
+            //Sign up
+        }
     };
 
     let formElementsArray=[];
@@ -72,8 +88,6 @@ const Auth=props=>{
             touched={formElement.config.touched}
             changed={(event)=>inputChangedHandler(event,formElement.id)} />
     });
-    
-    console.log(form);
 
     return(
         <div className={classes.Auth}>
