@@ -34,4 +34,8 @@ export const checkValidity = ( value, rules ) => {
     }
 
     return isValid;
-}
+};
+
+export const charReplace=( str , charRemove, newChar )=>{
+    return str.toString().replace(charRemove,newChar);
+};

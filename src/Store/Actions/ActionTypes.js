@@ -1,0 +1,5 @@
+export const SET_AMOUNT="SET_AMOUNT";
+export const SET_LAST_AMOUNT="SET_LAST_AMOUNT";
+export const SET_OPERATION="SET_OPERATION";
+export const SET_BEFORE="SET_BEFORE";
+

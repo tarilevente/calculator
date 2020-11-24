@@ -1,6 +1,6 @@
 .Auth{
     background-color: rgb(243, 243, 250);
-    position:fixed;
+    position: absolute;;
     width: 750px;
     height: 80%;
     max-height: 600px;
