@@ -4,13 +4,16 @@ import Controls from '../../Components/Calculator/Controls/Controls';
 import Monitor from '../../Components/Calculator/Monitor/Monitor';
 import {charReplace as replace} from '../../shared/utility';
 
+import {connect} from 'react-redux';
+import * as actions from '../../Store/Actions/index';
+
 const Calculator =props=>{
     // const [amount,setAmount]=useState(0);
     // const [lastAmount,setLastAmount]=useState(0);
     // const [operation, setOperation]=useState(null);
     // const [before, setBefore]=useState(0);
 
-    
+
     const [isValidAmount,setIsValidAmount]=useState(true);
     const [isValidBefore,setIsValidBefore]=useState(true);
 
@@ -40,85 +43,84 @@ const Calculator =props=>{
     }
 
     const numberIsNext=(val)=>{
-        if(!amount){ setAmount(val); } else 
-        if(amount.length<14){
-            const actAmount = amount + val;
-            setAmount(actAmount);
+        if(!props.getAmount){ props.onSetAmount(val); } else 
+        if(props.getAmount.length<14){
+            const actAmount = props.getAmount + val;
+            props.onSetAmount(actAmount);
         };
     };
 
     const typicOperation=(val)=>{
         switch (val) {
-            case 'DIVIDE_SPEC':setOperation('DIVIDE_SPEC'); setBefore(amount.toString()+'%');
+            case 'DIVIDE_SPEC':props.onSetOperation('DIVIDE_SPEC'); props.onSetBefore(props.getAmount.toString()+'%');
                 break;
-            case 'DIVIDE':setOperation('DIVIDE'); setBefore(amount.toString()+'/');
+            case 'DIVIDE':props.onSetOperation('DIVIDE'); props.onSetBefore(props.getAmount.toString()+'/');
                 break;
-            case 'X':setOperation('X'); setBefore(amount.toString()+'*');
+            case 'X':props.onSetOperation('X'); props.onSetBefore(props.getAmount.toString()+'*');
                 break;
-            case 'NEG':setOperation('NEG'); setBefore(amount.toString()+'-');
+            case 'NEG':props.onSetOperation('NEG'); props.onSetBefore(props.getAmount.toString()+'-');
                 break;
-            case 'PLUS':setOperation('PLUS'); setBefore(amount.toString()+'+');
+            case 'PLUS':props.onSetOperation('PLUS'); props.onSetBefore(props.getAmount.toString()+'+');
                 break;
             case 'CHANGE': 
                 return changeOperation();
             default: 
                 throw new Error('Hiba a Calculator.js : typicOperation-nál');
         }
-        setLastAmount(amount);
-        setAmount(0);
+        props.onSetLastAmount(props.getAmount);
+        props.onSetAmount(0);
     };
 
     const equalOperation=()=>{
-        const a= +amount;
-        const lastAm= +lastAmount;
-        const op= operation;
+        const a= +props.getAmount;
+        const lastAm= +props.getLastAmount;
+        const op= props.getOperation;
         let res=null;
         switch (op) {
-            case 'PLUS': res=lastAm+a; setBefore(lastAm.toString()+'+'+a);
+            case 'PLUS': res=lastAm+a; props.onSetBefore(lastAm.toString()+'+'+a);
                 break;
-            case 'NEG': res=lastAm-a; setBefore(lastAm.toString()+'-'+a);
+            case 'NEG': res=lastAm-a; props.onSetBefore(lastAm.toString()+'-'+a);
                 break;
-            case 'X': res=lastAm*a; setBefore(lastAm.toString()+'*'+a);
+            case 'X': res=lastAm*a; props.onSetBefore(lastAm.toString()+'*'+a);
                 break;
-            case 'DIVIDE': res=lastAm/a; setBefore(lastAm.toString()+'/'+a);
+            case 'DIVIDE': res=lastAm/a; props.onSetBefore(lastAm.toString()+'/'+a);
                 break;
-            case 'DIVIDE_SPEC': res=lastAm%a; setBefore(lastAm.toString()+'%'+a);
+            case 'DIVIDE_SPEC': res=lastAm%a; props.onSetBefore(lastAm.toString()+'%'+a);
                 break;
             default:
                 throw new Error('hiba a calculator.js-ben az equalOperation-nál.');
         };
-        setLastAmount(amount);
-        setAmount(res);
+        props.onSetLastAmount(props.getAmount);
+        props.onSetAmount(res);
     };
 
     const backOperation=()=>{
-        if(amount.length>1){
-            setAmount(amount.substring(0,amount.length-1));
-            setBefore(null);
+        if(props.getAmount.length>1){
+            props.onSetAmount(props.getAmount.substring(0,props.getAmount.length-1));
+            props.onSetBefore(null);
         }else{
-            setAmount(0);
-            setBefore(null);
+            props.onSetAmount(0);
+            props.onSetBefore(null);
         }
-        setOperation(null);
+        props.onSetOperation(null);
     };
 
     const cancelOperation=()=>{
-        setAmount(0);
-        setLastAmount(0);
-        setOperation(null);
-        setBefore(null);
+        props.onSetAmount(0);
+        props.onSetLastAmount(0);
+        props.onSetOperation(null);
+        props.onSetBefore(null);
     };
 
     const commaOperation=()=>{
-        if(amount.indexOf('.')===-1){
-            const digit=amount.concat('.'); 
-            setAmount(digit);
+        if(props.getAmount.indexOf('.')===-1){
+            const digit=props.getAmount.concat('.'); 
+            props.onSetAmount(digit);
         };
     };
 
     const changeOperation=()=>{
-        setAmount(-amount);
-        // setOperation(null);
+        props.onSetAmount(-props.getAmount);
     };    
 
     const isValidNumber=(num)=>{
@@ -126,21 +128,21 @@ const Calculator =props=>{
     };
 
     useEffect(()=>{
-        if(amount && amount.toString().length>15){ setIsValidAmount(false); } 
+        if(props.getAmount && props.getAmount.toString().length>15){ setIsValidAmount(false); } 
             else { setIsValidAmount(true); };
-        if(before && before.toString().length>20){ setIsValidBefore(false); }
+        if(props.getBefore && props.getBefore.toString().length>20){ setIsValidBefore(false); }
             else{ setIsValidBefore(true); };
-    },[amount,before]);
+    },[props.getAmount,props.getBefore]);
 
-    let am= amount? replace(amount,".",","):0;
-    let bef= before? replace(before,".",","):null; 
+    let am= props.getAmount? replace(props.getAmount,".",","):0;
+    let bef= props.getBefore? replace(props.getBefore,".",","):null; 
     if(!isValidAmount){
-        am= amount? amount.toString().substring(0,15).replace(".",",")+'!!!': 0;
+        am= props.getAmount? props.getAmount.toString().substring(0,15).replace(".",",")+'!!!': 0;
     };
     //charReplace is because of the double numbers!
-    if(amount && !isValidNumber(replace(amount,",","9"))){am= "Hibás számítás!";}; 
+    if(props.getAmount && !isValidNumber(replace(props.getAmount,",","9"))){am= "Hibás számítás!";}; 
     if(!isValidBefore){
-        bef= before? replace(before.toString().substring(0,20),".",","):null;
+        bef= props.getBefore? replace(props.getBefore.toString().substring(0,20),".",","):null;
     };
 
     let render=<Monitor amount={am} before={bef} />;
@@ -152,4 +154,25 @@ const Calculator =props=>{
     );
 };
 
-export default React.memo(Calculator);
+const mapStateToProps=state=>{
+    return{
+        getAmount:state.calculator.amount,
+        getLastAmount:state.calculator.lastAmount,
+        getBefore:state.calculator.before,
+        getOperation:state.calculator.operation
+    };
+};
+
+const mapDispatchToProps=dispatch=>{
+    return{
+        onSetAmount:(am)=>dispatch(actions.setAmount(am)), //action creators miatt NEM {type:"...", amount:am}// A return (JSObj lesz dispatch-elve)
+        onSetLastAmount:(lam)=>dispatch(actions.setLastAmount(lam)),
+        onSetBefore:(bef)=>dispatch(actions.setBefore(bef)),
+        onSetOperation:(op)=>dispatch(actions.setOperation(op))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(React.memo(Calculator));
