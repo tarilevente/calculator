@@ -4,6 +4,7 @@ import classes from './Calculator.module.css';
 import Controls from '../../Components/Calculator/Controls/Controls';
 import Monitor from '../../Components/Calculator/Monitor/Monitor';
 import Button from '../../Components/UI/Button/Button';
+import Spinner from '../../Components/UI/Spinner/Spinner';
 
 import {charReplace as replace} from '../../shared/utility';
 
@@ -169,17 +170,19 @@ const Calculator =props=>{
     let save=(
         <div className={classes.saveDiv}>
             <form onSubmit={saveHandler}>
-                <Button clicked={()=>{}}
-                        disabled={!ableToSave}
+                <Button disabled={!ableToSave}
                         btnType={!ableToSave?'Danger':'Success'}        
                 >Eredmény mentése</Button>
             </form>
         </div>
     );
+    let controls=<Controls clicked={clickedHandler}/>;
+    if(props.resultLoading){controls=<Spinner />;}
+
     return(
         <div className={classes.Content}>
             {monitor}
-            <Controls clicked={clickedHandler}/>
+            {controls}
             {save}
         </div>
     );
@@ -193,7 +196,8 @@ const mapStateToProps=state=>{
         getOperation:state.calculator.operation,
         getLastWasOperation:state.calculator.lastWasOperation,
         getToken:state.auth.token,
-        getUserId:state.auth.userId
+        getUserId:state.auth.userId,
+        resultLoading:state.results.loading
     };
 };
 

@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+
 import classes from './Auth.module.css';
-import Input from '../../Components/UI/Input/Input';
 import {updateObject, checkValidity} from '../../shared/utility';
-import Button from '../../Components/UI/Button/Button';
 import {connect} from 'react-redux';
+
+import Input from '../../Components/UI/Input/Input';
+import Button from '../../Components/UI/Button/Button';
+import Spinner from '../../Components/UI/Spinner/Spinner';
 
 import * as actions from '../../Store/Actions/index';
 
@@ -91,9 +94,15 @@ const Auth=props=>{
             touched={formElement.config.touched}
             changed={(event)=>inputChangedHandler(event,formElement.id)} />
     });
+    if(props.loading){form=<Spinner/>;}
+    let errorMsg=null;
+    if(props.error){
+        errorMsg=<h2>{props.error}</h2>;
+    }
 
     return(
         <div className={classes.Auth}>
+            {errorMsg}
             <form onSubmit={submitHandler}>
                 {form}
                 <Button btnType="Success" >SUBMIT</Button>
@@ -104,7 +113,8 @@ const Auth=props=>{
 
 const mapStateToProps=state=>{
     return{
-
+        loading:state.auth.loading,
+        error:state.auth.error
     };
 };
 

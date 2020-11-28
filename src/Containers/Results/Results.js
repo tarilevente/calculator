@@ -1,18 +1,16 @@
 import React,{useState,useEffect} from 'react';
-import axios from '../../axios';
 import  {connect} from 'react-redux';
+import classes from './Results.module.css';
 
 const Results=props=>{
-
-
     return(
-        <div>Results</div>
+        <div className={classes.Results}>Results</div>
     );
 };
 
 const mapStateToProps=state=>{  
     return{
-        
+
     };
 };
 
