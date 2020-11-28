@@ -15,6 +15,13 @@ const saveSuccess=(id,resultData)=>{
     };
 };
 
+const saveFailed=(error)=>{
+    return{
+        type:actions.SAVE_RES_FAIL,
+        error:error
+    };
+};
+
 export const saveResult=(result,uid,token)=>{
     return dispatch=>{    
         dispatch(saveResultStart());
@@ -22,14 +29,13 @@ export const saveResult=(result,uid,token)=>{
             userId:uid,
             result:result
         };
-
         axios.post('/results.json?auth='+token,saveData)
             .then(response=>{
                 // console.log(response+' : '+response.data.name);
                 dispatch(saveSuccess(response.data.name,saveData));
             })
             .catch(err=>{
-
+                dispatch(saveFailed(err));
             });
     };
 };
