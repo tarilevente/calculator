@@ -111,7 +111,7 @@ const controls={
         PLUS:{
             display:"+",
             val:"PLUS",
-            color:"darlred",
+            color:"darkred",
             bg:"honeydew",
             category:["OPERATIONS","TYPIC_OPERATIONS"]
         },
@@ -158,6 +158,7 @@ const Controls = props => {
                     {controls[el].display}
                 </ControlElement>);
     });
+
     return(
         <div className={classes.Controls}>
             {contrl}

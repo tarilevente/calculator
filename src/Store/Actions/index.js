@@ -2,7 +2,8 @@ export {
     setAmount,
     setLastAmount,
     setBefore,
-    setOperation
+    setOperation,
+    setLastWasOperation
 } from './Calculator';
 
 export {

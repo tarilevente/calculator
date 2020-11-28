@@ -4,6 +4,7 @@ import Layout from './hoc/Layout/Layout';
 import {Route, Switch, withRouter, Redirect} from 'react-router-dom';
 import Calculator from './Containers/Calculator/Calculator';
 import Logout from './Containers/Auth/Logout/Logout';
+import Results from './Containers/Results/Results';
 
 import {connect} from 'react-redux';
 import * as actions from './Store/Actions';
@@ -30,6 +31,7 @@ const App=(props)=> {
     routes=(
       <Switch>
         <Route path="/logout" component={Logout} />
+        <Route path="/results" component={Results} />
         <Route path="/" exact component={Calculator} />
         <Redirect to="/" />
       </Switch>

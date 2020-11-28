@@ -11,6 +11,10 @@
     margin: 10px 15px;
 }
 
+.saveDiv{
+    margin-top:10px;
+}
+
 @media(max-width:550px){
     .Content{
         left:0;
