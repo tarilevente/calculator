@@ -27,3 +27,10 @@ export const setOperation=(operation)=>{
         operation:operation
     };
 };
+
+export const setLastWasOperation=(bool)=>{
+    return{
+        type:actionTypes.SET_LAST_WAS_OPERATION,
+        bool:bool
+    }
+};

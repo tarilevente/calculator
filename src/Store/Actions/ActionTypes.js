@@ -2,10 +2,17 @@ export const SET_AMOUNT="SET_AMOUNT";
 export const SET_LAST_AMOUNT="SET_LAST_AMOUNT";
 export const SET_OPERATION="SET_OPERATION";
 export const SET_BEFORE="SET_BEFORE";
+export const SET_LAST_WAS_OPERATION="SET_LAST_WAS_OPERATION";
 
 export const AUTH_START="AUTH_START";
 export const AUTH_SUCCESS="AUTH_SUCCESS";
 export const AUTH_FAIL="AUTH_FAIL";
 export const AUTH_LOGOUT="AUTH_LOGOUT";
+
+export const SAVE_RES_START="SAVE_RES_START";
+export const SAVE_RES_SUCCESS="SAVE_RES_SUCCESS";
+export const SAVE_RES_FAIL="SAVE_RES_FAIL";
+
+
 
 

@@ -2,7 +2,8 @@ export {
     setAmount,
     setLastAmount,
     setBefore,
-    setOperation
+    setOperation,
+    setLastWasOperation
 } from './Calculator';
 
 export {
@@ -10,3 +11,7 @@ export {
     authCheckState,
     logout
 } from './Auth';
+
+export{
+    saveResult
+} from './Results'

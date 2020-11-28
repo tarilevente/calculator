@@ -1,21 +1,19 @@
 import React,{useEffect, useState} from 'react';
 import classes from './Calculator.module.css';
+
 import Controls from '../../Components/Calculator/Controls/Controls';
 import Monitor from '../../Components/Calculator/Monitor/Monitor';
+import Button from '../../Components/UI/Button/Button';
+
 import {charReplace as replace} from '../../shared/utility';
 
 import {connect} from 'react-redux';
 import * as actions from '../../Store/Actions/index';
 
 const Calculator =props=>{
-    // const [amount,setAmount]=useState(0);
-    // const [lastAmount,setLastAmount]=useState(0);
-    // const [operation, setOperation]=useState(null);
-    // const [before, setBefore]=useState(0);
-
-
     const [isValidAmount,setIsValidAmount]=useState(true);
     const [isValidBefore,setIsValidBefore]=useState(true);
+    const [ableToSave,setAbleToSave]=useState(false);
 
     const isNumber=(arr)=>{ return arr[0] === "NUMBER"; };
     const isOp=(arr)=>{ return arr[0] === "OPERATIONS" };
@@ -27,6 +25,7 @@ const Calculator =props=>{
     const isTypicOp=(arr)=>{ return arr[1] === "TYPIC_OPERATIONS" };
 
     const clickedHandler=(cat,val)=>{
+        setAbleToSave(false);
         if(isNumber(cat)){  return numberIsNext(val); }; 
         if(isOp(cat)){ 
             if(isBackCat(cat)){ 
@@ -43,32 +42,43 @@ const Calculator =props=>{
     }
 
     const numberIsNext=(val)=>{
-        if(!props.getAmount){ props.onSetAmount(val); } else 
-        if(props.getAmount.length<14){
+        if(!props.getAmount){ 
+            props.onSetAmount(val); 
+            props.onLastWasTypicOperation(false); 
+        } else if(
+            props.getAmount.length<14){
             const actAmount = props.getAmount + val;
-            props.onSetAmount(actAmount);
+            props.onSetAmount(actAmount); 
+            props.onLastWasTypicOperation(false);
         };
     };
 
     const typicOperation=(val)=>{
+        let operation='';
         switch (val) {
-            case 'DIVIDE_SPEC':props.onSetOperation('DIVIDE_SPEC'); props.onSetBefore(props.getAmount.toString()+'%');
+            case 'DIVIDE_SPEC':props.onSetOperation('DIVIDE_SPEC'); operation='%'; props.onSetBefore(props.getAmount.toString()+'%');
                 break;
-            case 'DIVIDE':props.onSetOperation('DIVIDE'); props.onSetBefore(props.getAmount.toString()+'/');
+            case 'DIVIDE':props.onSetOperation('DIVIDE'); operation='/'; props.onSetBefore(props.getAmount.toString()+'/');
                 break;
-            case 'X':props.onSetOperation('X'); props.onSetBefore(props.getAmount.toString()+'*');
+            case 'X':props.onSetOperation('X'); operation='*'; props.onSetBefore(props.getAmount.toString()+'*');
                 break;
-            case 'NEG':props.onSetOperation('NEG'); props.onSetBefore(props.getAmount.toString()+'-');
+            case 'NEG':props.onSetOperation('NEG'); operation='-'; props.onSetBefore(props.getAmount.toString()+'-');
                 break;
-            case 'PLUS':props.onSetOperation('PLUS'); props.onSetBefore(props.getAmount.toString()+'+');
+            case 'PLUS':props.onSetOperation('PLUS'); operation='+'; props.onSetBefore(props.getAmount.toString()+'+');
                 break;
             case 'CHANGE': 
                 return changeOperation();
             default: 
                 throw new Error('Hiba a Calculator.js : typicOperation-nál');
         }
-        props.onSetLastAmount(props.getAmount);
-        props.onSetAmount(0);
+        if(props.getLastWasOperation){
+            props.onSetBefore(props.getLastAmount.toString()+operation);
+            props.onLastWasTypicOperation(true);
+        }else{
+            props.onLastWasTypicOperation(true);
+            props.onSetLastAmount(props.getAmount);
+            props.onSetAmount(0);
+        }
     };
 
     const equalOperation=()=>{
@@ -88,10 +98,13 @@ const Calculator =props=>{
             case 'DIVIDE_SPEC': res=lastAm%a; props.onSetBefore(lastAm.toString()+'%'+a);
                 break;
             default:
-                throw new Error('hiba a calculator.js-ben az equalOperation-nál.');
+                return res=a;
         };
-        props.onSetLastAmount(props.getAmount);
+        props.onSetLastAmount(a);
         props.onSetAmount(res);
+        props.onLastWasTypicOperation(false);
+
+        if(a){setAbleToSave(true);}
     };
 
     const backOperation=()=>{
@@ -103,6 +116,7 @@ const Calculator =props=>{
             props.onSetBefore(null);
         }
         props.onSetOperation(null);
+        props.onLastWasTypicOperation(false);
     };
 
     const cancelOperation=()=>{
@@ -110,6 +124,7 @@ const Calculator =props=>{
         props.onSetLastAmount(0);
         props.onSetOperation(null);
         props.onSetBefore(null);
+        props.onLastWasTypicOperation(false);
     };
 
     const commaOperation=()=>{
@@ -134,6 +149,11 @@ const Calculator =props=>{
             else{ setIsValidBefore(true); };
     },[props.getAmount,props.getBefore]);
 
+    const saveHandler=(event)=>{
+        event.preventDefault();
+        props.onSave(props.getAmount,props.getUserId,props.getToken);
+    };
+
     let am= props.getAmount? replace(props.getAmount,".",","):0;
     let bef= props.getBefore? replace(props.getBefore,".",","):null; 
     if(!isValidAmount){
@@ -145,11 +165,22 @@ const Calculator =props=>{
         bef= props.getBefore? replace(props.getBefore.toString().substring(0,20),".",","):null;
     };
 
-    let render=<Monitor amount={am} before={bef} />;
+    let monitor=<Monitor amount={am} before={bef} />;
+    let save=(
+        <div className={classes.saveDiv}>
+            <form onSubmit={saveHandler}>
+                <Button clicked={()=>{}}
+                        disabled={!ableToSave}
+                        btnType={!ableToSave?'Danger':'Success'}        
+                >Eredmény mentése</Button>
+            </form>
+        </div>
+    );
     return(
         <div className={classes.Content}>
-            {render}
+            {monitor}
             <Controls clicked={clickedHandler}/>
+            {save}
         </div>
     );
 };
@@ -159,16 +190,21 @@ const mapStateToProps=state=>{
         getAmount:state.calculator.amount,
         getLastAmount:state.calculator.lastAmount,
         getBefore:state.calculator.before,
-        getOperation:state.calculator.operation
+        getOperation:state.calculator.operation,
+        getLastWasOperation:state.calculator.lastWasOperation,
+        getToken:state.auth.token,
+        getUserId:state.auth.userId
     };
 };
 
 const mapDispatchToProps=dispatch=>{
     return{
+        onLastWasTypicOperation:(bool)=>dispatch(actions.setLastWasOperation(bool)),
         onSetAmount:(am)=>dispatch(actions.setAmount(am)), //action creators miatt NEM {type:"...", amount:am}// A return (JSObj lesz dispatch-elve)
         onSetLastAmount:(lam)=>dispatch(actions.setLastAmount(lam)),
         onSetBefore:(bef)=>dispatch(actions.setBefore(bef)),
-        onSetOperation:(op)=>dispatch(actions.setOperation(op))
+        onSetOperation:(op)=>dispatch(actions.setOperation(op)),
+        onSave:(res,uid,token)=>dispatch(actions.saveResult(res,uid,token))
     };
 };
 
