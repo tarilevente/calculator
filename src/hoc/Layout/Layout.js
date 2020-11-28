@@ -9,11 +9,11 @@ const Layout =props=>{
 
     const sideDrawerClosedHandler=()=>{
         setSideDrawerIsVisible(false);
-    }
+    };
 
     const sideDrawerToggleHandler=()=>{
         setSideDrawerIsVisible(!sideDrawerIsVisible);
-    }
+    };
 
     return(
         <Auxillary className={classes.Content}>

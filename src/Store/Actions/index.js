@@ -4,3 +4,7 @@ export {
     setBefore,
     setOperation
 } from './Calculator';
+
+export {
+    auth
+} from './Auth';
