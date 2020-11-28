@@ -13,6 +13,7 @@ import * as actions from '../../Store/Actions/index';
 const Calculator =props=>{
     const [isValidAmount,setIsValidAmount]=useState(true);
     const [isValidBefore,setIsValidBefore]=useState(true);
+    const [ableToSave,setAbleToSave]=useState(false);
 
     const isNumber=(arr)=>{ return arr[0] === "NUMBER"; };
     const isOp=(arr)=>{ return arr[0] === "OPERATIONS" };
@@ -24,6 +25,7 @@ const Calculator =props=>{
     const isTypicOp=(arr)=>{ return arr[1] === "TYPIC_OPERATIONS" };
 
     const clickedHandler=(cat,val)=>{
+        setAbleToSave(false);
         if(isNumber(cat)){  return numberIsNext(val); }; 
         if(isOp(cat)){ 
             if(isBackCat(cat)){ 
@@ -96,11 +98,13 @@ const Calculator =props=>{
             case 'DIVIDE_SPEC': res=lastAm%a; props.onSetBefore(lastAm.toString()+'%'+a);
                 break;
             default:
-                throw new Error('hiba a calculator.js-ben az equalOperation-nál.');
+                return res=a;
         };
-        props.onSetLastAmount(props.getAmount);
+        props.onSetLastAmount(a);
         props.onSetAmount(res);
         props.onLastWasTypicOperation(false);
+
+        if(a){setAbleToSave(true);}
     };
 
     const backOperation=()=>{
@@ -145,8 +149,9 @@ const Calculator =props=>{
             else{ setIsValidBefore(true); };
     },[props.getAmount,props.getBefore]);
 
-    const saveHandler=()=>{
-
+    const saveHandler=(event)=>{
+        event.preventDefault();
+        props.onSave(props.getAmount,props.getUserId,props.getToken);
     };
 
     let am= props.getAmount? replace(props.getAmount,".",","):0;
@@ -161,13 +166,12 @@ const Calculator =props=>{
     };
 
     let monitor=<Monitor amount={am} before={bef} />;
-    console.log(+props.getLastAmount);
     let save=(
         <div className={classes.saveDiv}>
             <form onSubmit={saveHandler}>
                 <Button clicked={()=>{}}
-                        disabled={+props.getLastAmount===0}
-                        btnType={+props.getLastAmount===0?'Danger':'Success'}        
+                        disabled={!ableToSave}
+                        btnType={!ableToSave?'Danger':'Success'}        
                 >Eredmény mentése</Button>
             </form>
         </div>
@@ -187,7 +191,9 @@ const mapStateToProps=state=>{
         getLastAmount:state.calculator.lastAmount,
         getBefore:state.calculator.before,
         getOperation:state.calculator.operation,
-        getLastWasOperation:state.calculator.lastWasOperation
+        getLastWasOperation:state.calculator.lastWasOperation,
+        getToken:state.auth.token,
+        getUserId:state.auth.userId
     };
 };
 
@@ -197,7 +203,8 @@ const mapDispatchToProps=dispatch=>{
         onSetAmount:(am)=>dispatch(actions.setAmount(am)), //action creators miatt NEM {type:"...", amount:am}// A return (JSObj lesz dispatch-elve)
         onSetLastAmount:(lam)=>dispatch(actions.setLastAmount(lam)),
         onSetBefore:(bef)=>dispatch(actions.setBefore(bef)),
-        onSetOperation:(op)=>dispatch(actions.setOperation(op))
+        onSetOperation:(op)=>dispatch(actions.setOperation(op)),
+        onSave:(res,uid,token)=>dispatch(actions.saveResult(res,uid,token))
     };
 };
 

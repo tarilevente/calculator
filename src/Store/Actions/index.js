@@ -11,3 +11,7 @@ export {
     authCheckState,
     logout
 } from './Auth';
+
+export{
+    saveResult
+} from './Results'
