@@ -121,7 +121,6 @@ const Calculator =props=>{
 
     const changeOperation=()=>{
         props.onSetAmount(-props.getAmount);
-        // setOperation(null);
     };    
 
     const isValidNumber=(num)=>{
@@ -166,7 +165,7 @@ const mapStateToProps=state=>{
 
 const mapDispatchToProps=dispatch=>{
     return{
-        onSetAmount:(am)=>dispatch(actions.setAmount(am)),
+        onSetAmount:(am)=>dispatch(actions.setAmount(am)), //action creators miatt NEM {type:"...", amount:am}// A return (JSObj lesz dispatch-elve)
         onSetLastAmount:(lam)=>dispatch(actions.setLastAmount(lam)),
         onSetBefore:(bef)=>dispatch(actions.setBefore(bef)),
         onSetOperation:(op)=>dispatch(actions.setOperation(op))
