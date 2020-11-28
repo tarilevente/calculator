@@ -6,5 +6,7 @@ export {
 } from './Calculator';
 
 export {
-    auth
+    auth,
+    authCheckState,
+    logout
 } from './Auth';
