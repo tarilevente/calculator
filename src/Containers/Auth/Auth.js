@@ -3,6 +3,9 @@ import classes from './Auth.module.css';
 import Input from '../../Components/UI/Input/Input';
 import {updateObject, checkValidity} from '../../shared/utility';
 import Button from '../../Components/UI/Button/Button';
+import {connect} from 'react-redux';
+
+import * as actions from '../../Store/Actions/index';
 
 const Auth=props=>{
     const [authForm,setAuthForm]=useState({
@@ -62,9 +65,9 @@ const Auth=props=>{
     const submitHandler=(event)=>{
         event.preventDefault();
         if(authForm.registration.value==='Login'){
-            //Login
+            props.onAuth(authForm.email.value, authForm.password.value,false);
         }else if(authForm.registration.value==='SignUp'){
-            //Sign up
+            props.onAuth(authForm.email.value, authForm.password.value,true);
         }
     };
 
@@ -99,4 +102,16 @@ const Auth=props=>{
     );
 };
 
-export default Auth;
+const mapStateToProps=state=>{
+    return{
+
+    };
+};
+
+const mapDispatchToProps=dispatch=>{
+    return{
+        onAuth:(mail,pwd,isSign)=>dispatch(actions.auth(mail,pwd,isSign))
+    };
+};
+
+export default connect(mapStateToProps,mapDispatchToProps)(Auth);

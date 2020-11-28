@@ -10,6 +10,7 @@ import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import calculatorReducer from './Store/Reducers/Calculator';
+import authReducer from './Store/Reducers/Auth';
 
 import thunk from 'redux-thunk';
 
@@ -20,7 +21,8 @@ const composeEnhancers =
   || compose;
 
 const rootReducer = combineReducers({
-  calculator:calculatorReducer
+  calculator:calculatorReducer,
+  auth:authReducer
 });
 
 const store=createStore(rootReducer, composeEnhancers(
