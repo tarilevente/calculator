@@ -32,5 +32,12 @@ export const setLastWasOperation=(bool)=>{
     return{
         type:actionTypes.SET_LAST_WAS_OPERATION,
         bool:bool
-    }
+    };
+};
+
+export const aboutToSave=(bool)=>{
+    return{
+        type:actionTypes.ABOUT_TO_SAVE,
+        bool:bool
+    };
 };

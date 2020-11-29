@@ -3,15 +3,18 @@ export {
     setLastAmount,
     setBefore,
     setOperation,
-    setLastWasOperation
+    setLastWasOperation,
+    aboutToSave
 } from './Calculator';
 
 export {
     auth,
     authCheckState,
-    logout
+    logout,
+    setRedirectPath
 } from './Auth';
 
 export{
-    saveResult
+    saveResult,
+    fetchResults
 } from './Results'
