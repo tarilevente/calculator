@@ -12,7 +12,11 @@
 }
 
 .saveDiv{
-    margin-top:10px;
+    position: fixed;
+    width:450px;
+    top:85%;
+    left:25%;
+    margin: 10px 15px;
 }
 
 @media(max-width:550px){

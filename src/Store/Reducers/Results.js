@@ -26,11 +26,35 @@ const saveResFail=(state,action)=>{
     });
 };
 
+const fetchResultsStart=(state, action)=>{
+    return updateObject(state,{
+        loading:true
+    });
+};
+
+const fetchResultsSuccess=(state, action)=>{
+    return updateObject(state,{
+        loading:false,
+        results:action.res,
+        error:null
+    });
+};
+
+const fetchResultsFailed=(state, action)=>{
+    return updateObject(state,{
+        loading:false,
+        error:action.err
+    });
+};
+
 const reducer=(state=initialState,action)=>{
     switch (action.type) {
         case actions.SAVE_RES_START: return saveResStart(state, action);
         case actions.SAVE_RES_SUCCESS: return saveResSuccess(state, action);
         case actions.SAVE_RES_FAIL: return saveResFail(state, action);
+        case actions.FETCH_RES_START: return fetchResultsStart(state, action);
+        case actions.FETCH_RES_SUCCESS: return fetchResultsSuccess(state, action);
+        case actions.FETCH_RES_FAILED: return fetchResultsFailed(state, action);
 
         default:
             return state;

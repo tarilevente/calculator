@@ -23,7 +23,7 @@ const App=(props)=> {
     <Switch>
       <Route path="/auth" render={(props)=><Auth {...props}/>} />
       <Route path="/" exact component={Calculator} />
-      <Redirect to="/" />
+      {/* <Redirect to="/" /> */}
     </Switch>
   );
 
@@ -33,7 +33,7 @@ const App=(props)=> {
         <Route path="/logout" component={Logout} />
         <Route path="/results" component={Results} />
         <Route path="/" exact component={Calculator} />
-        <Redirect to="/" />
+        {/* <Redirect to="/" /> */}
       </Switch>
     );
   }

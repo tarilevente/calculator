@@ -6,7 +6,8 @@ const initialState={
     lastAmount:0,
     operation:null,
     before:null,
-    lastWasOperation:false
+    lastWasOperation:false,
+    aboutToSave:false
 };
 
 const setAmount=(state, action)=>{
@@ -29,6 +30,12 @@ const setLastWasOperation=(state, action)=>{
     return updateObject(state, {lastWasOperation:action.bool});
 };
 
+const setAboutToSave=(state, action)=>{
+    return updateObject(state,{
+        aboutToSave:action.bool
+    });
+};
+
 const reducer=(state=initialState,action)=>{
     switch (action.type) {
         case actionTypes.SET_AMOUNT: return setAmount(state, action);
@@ -36,6 +43,8 @@ const reducer=(state=initialState,action)=>{
         case actionTypes.SET_BEFORE: return setBefore(state, action);
         case actionTypes.SET_OPERATION: return setOperation(state, action);
         case actionTypes.SET_LAST_WAS_OPERATION: return setLastWasOperation(state, action);
+        case actionTypes.ABOUT_TO_SAVE: return setAboutToSave(state, action);
+
         default: return state;
     };
 };
