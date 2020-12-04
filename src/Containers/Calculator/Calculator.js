@@ -13,6 +13,8 @@ import * as actions from '../../Store/Actions/index';
 import {Redirect} from 'react-router-dom';
 
 const Calculator =props=>{
+    const {amount, lastAmount, before, operation, lastWasOperation, token, userId, redirectPath, onAboutToSave, onSave, aboutToSave}=props;
+
     const [isValidAmount,setIsValidAmount]=useState(true);
     const [isValidBefore,setIsValidBefore]=useState(true);
     const [ableToSave,setAbleToSave]=useState(false);
@@ -44,12 +46,12 @@ const Calculator =props=>{
     }
 
     const numberIsNext=(val)=>{
-        if(!props.getAmount){ 
+        if(!amount){ 
             props.onSetAmount(val); 
             props.onLastWasTypicOperation(false); 
         } else if(
-            props.getAmount.length<14){
-            const actAmount = props.getAmount + val;
+            amount.length<14){
+            const actAmount = amount + val;
             props.onSetAmount(actAmount); 
             props.onLastWasTypicOperation(false);
         };
@@ -58,35 +60,35 @@ const Calculator =props=>{
     const typicOperation=(val)=>{
         let operation='';
         switch (val) {
-            case 'DIVIDE_SPEC':props.onSetOperation('DIVIDE_SPEC'); operation='%'; props.onSetBefore(Number(props.getAmount).toString()+'%');
+            case 'DIVIDE_SPEC':props.onSetOperation('DIVIDE_SPEC'); operation='%'; props.onSetBefore(Number(amount).toString()+'%');
                 break;
-            case 'DIVIDE':props.onSetOperation('DIVIDE'); operation='/'; props.onSetBefore(Number(props.getAmount).toString()+'/');
+            case 'DIVIDE':props.onSetOperation('DIVIDE'); operation='/'; props.onSetBefore(Number(amount).toString()+'/');
                 break;
-            case 'X':props.onSetOperation('X'); operation='*'; props.onSetBefore(Number(props.getAmount).toString()+'*');
+            case 'X':props.onSetOperation('X'); operation='*'; props.onSetBefore(Number(amount).toString()+'*');
                 break;
-            case 'NEG':props.onSetOperation('NEG'); operation='-'; props.onSetBefore(Number(props.getAmount).toString()+'-');
+            case 'NEG':props.onSetOperation('NEG'); operation='-'; props.onSetBefore(Number(amount).toString()+'-');
                 break;
-            case 'PLUS':props.onSetOperation('PLUS'); operation='+'; props.onSetBefore(Number(props.getAmount).toString()+'+');
+            case 'PLUS':props.onSetOperation('PLUS'); operation='+'; props.onSetBefore(Number(amount).toString()+'+');
                 break;
             case 'CHANGE': 
                 return changeOperation();
             default: 
                 throw new Error('Hiba a Calculator.js : typicOperation-nál');
         }
-        if(props.getLastWasOperation){
-            props.onSetBefore(Number(props.getLastAmount).toString()+operation);
+        if(lastWasOperation){
+            props.onSetBefore(Number(lastAmount).toString()+operation);
             props.onLastWasTypicOperation(true);
         }else{
             props.onLastWasTypicOperation(true);
-            props.onSetLastAmount(props.getAmount);
+            props.onSetLastAmount(amount);
             props.onSetAmount(0);
         }
     };
 
     const equalOperation=()=>{
-        const a= +props.getAmount;
-        const lastAm= +props.getLastAmount;
-        const op= props.getOperation;
+        const a= +amount;
+        const lastAm= +lastAmount;
+        const op= operation;
         let res=null;
         switch (op) {
             case 'PLUS': res=lastAm+a; props.onSetBefore(Number(lastAm).toString()+'+'+a);
@@ -105,14 +107,14 @@ const Calculator =props=>{
         props.onSetLastAmount(a);
         props.onSetAmount(res);
         props.onLastWasTypicOperation(false);
-        props.onAboutToSave(false);
+        onAboutToSave(false);
 
         if(a){setAbleToSave(true);}
     };
 
     const backOperation=()=>{
-        if(props.getAmount.length>1){
-            props.onSetAmount(props.getAmount.substring(0,props.getAmount.length-1));
+        if(amount.length>1){
+            props.onSetAmount(amount.substring(0,amount.length-1));
             props.onSetBefore(null);
         }else{
             props.onSetAmount(0);
@@ -131,14 +133,14 @@ const Calculator =props=>{
     };
 
     const commaOperation=()=>{
-        if(props.getAmount.indexOf('.')===-1){
-            const digit=props.getAmount.concat('.'); 
+        if(amount.indexOf('.')===-1){
+            const digit=amount.concat('.'); 
             props.onSetAmount(digit);
         };
     };
 
     const changeOperation=()=>{
-        props.onSetAmount(-props.getAmount);
+        props.onSetAmount(-amount);
     };    
 
     const isValidNumber=(num)=>{
@@ -146,32 +148,32 @@ const Calculator =props=>{
     };
 
     useEffect(()=>{
-        if(props.getAmount && props.getAmount.toString().length>15){ setIsValidAmount(false); } 
+        if(amount && amount.toString().length>15){ setIsValidAmount(false); } 
             else { setIsValidAmount(true); };
-        if(props.getBefore && props.getBefore.toString().length>20){ setIsValidBefore(false); }
+        if(before && before.toString().length>20){ setIsValidBefore(false); }
             else{ setIsValidBefore(true); };
-    },[props.getAmount,props.getBefore]);
+    },[amount,before]);
 
     const saveHandler=(event)=>{
         event.preventDefault();
         if(props.isAuthenticated){
-            props.onSave(props.getAmount,props.getUserId,props.getToken);
+            onSave(amount,userId,token);
         }else{
-            props.onAboutToSave(true);
+            onAboutToSave(true);
             props.onSetAuthRedirectPath('/results');
             props.history.push("/auth");
         }
     };
 
-    let am= props.getAmount? replace(props.getAmount,".",","):0;
-    let bef= props.getBefore? replace(props.getBefore,".",","):null; 
+    let am= amount? replace(amount,".",","):0;
+    let bef= before? replace(before,".",","):null; 
     if(!isValidAmount){
-        am= props.getAmount? props.getAmount.toString().substring(0,15).replace(".",",")+'!!!': 0;
+        am= amount? amount.toString().substring(0,15).replace(".",",")+'!!!': 0;
     };
     //charReplace is because of the double numbers!
-    if(props.getAmount && !isValidNumber(replace(props.getAmount,",","9"))){am= "Hibás számítás!";}; 
+    if(amount && !isValidNumber(replace(amount,",","9"))){am= "Hibás számítás!";}; 
     if(!isValidBefore){
-        bef= props.getBefore? replace(props.getBefore.toString().substring(0,20),".",","):null;
+        bef= before? replace(before.toString().substring(0,20),".",","):null;
     };
 
     let monitor=<Monitor amount={am} before={bef} />;
@@ -184,12 +186,22 @@ const Calculator =props=>{
             </form>
         </div>
     );
+
     let controls=<Controls clicked={clickedHandler}/>;
     if(props.resultLoading){controls=<Spinner />;}
 
+    let redirect=null;
+    if(aboutToSave){ 
+        // debugger;
+        redirect=<Redirect to={redirectPath} />; 
+        onAboutToSave(false);
+        onSave(amount,userId,token);
+    }
+    
     return(
         <div>
             <div className={classes.Content}>
+                {redirect}
                 {monitor}
                 {controls}
             </div>
@@ -200,15 +212,17 @@ const Calculator =props=>{
 
 const mapStateToProps=state=>{
     return{
-        getAmount:state.calculator.amount,
-        getLastAmount:state.calculator.lastAmount,
-        getBefore:state.calculator.before,
-        getOperation:state.calculator.operation,
-        getLastWasOperation:state.calculator.lastWasOperation,
-        getToken:state.auth.token,
-        getUserId:state.auth.userId,
+        amount:state.calculator.amount,
+        lastAmount:state.calculator.lastAmount,
+        before:state.calculator.before,
+        operation:state.calculator.operation,
+        lastWasOperation:state.calculator.lastWasOperation,
+        token:state.auth.token,
+        userId:state.auth.userId,
         resultLoading:state.results.loading,
-        isAuthenticated:state.auth.token!==null
+        isAuthenticated:state.auth.token!==null,
+        aboutToSave:state.calculator.aboutToSave,
+        redirectPath:state.auth.authRedirectPath
     };
 };
 
