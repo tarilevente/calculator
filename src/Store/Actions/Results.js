@@ -63,7 +63,8 @@ export const fetchResultsFailed=(err)=>{
 export const fetchResults=(uid,token)=>{
     return dispatch=>{
         dispatch(fetchResultsStart());
-        axios.get('/results.json?auth='+token) //'orderBy="userId"&equalTo="'+uid+'"'
+        const queryParams='?auth='+token+'&orderBy="userId"&equalTo="'+uid+'"';
+        axios.get('/results.json'+queryParams) //'orderBy="userId"&equalTo="'+uid+'"'
             .then(res=>{
                 let fetchedResults=[];
                 for(let key in res.data){

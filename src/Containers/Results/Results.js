@@ -45,7 +45,7 @@ const mapStateToProps=state=>{
 
 const mapDispatchToProps=dispatch=>{
     return{
-        onFetchResults:(uid,token)=>dispatch(actions.fetchResults(uid,token))
+        onFetchResults:(uid,token)=>dispatch(actions.fetchResults(uid,token)),
     };
 };
 
