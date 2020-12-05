@@ -27,12 +27,13 @@ const Results=props=>{
     if(!loading && !error){
         res=results.map(r=>{
             return(
-                <Link to={"/result/"+r.id} key={r.id} >
+                <Link to={`/result/${r.id}`} key={r.id} >
                     <Result 
                         {...props}
                         date={r.date}
                         result={r.result}
-                        clicked={()=>selectedHandler(r.id)}/>
+                        clicked={()=>selectedHandler(r.id)}
+                        id={r.id}/>
                 </Link>
             );
         });

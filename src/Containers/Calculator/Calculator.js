@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React,{useEffect, useReducer, useState} from 'react';
 import classes from './Calculator.module.css';
 
 import Controls from '../../Components/Calculator/Controls/Controls';
@@ -11,17 +11,37 @@ import {charReplace as replace} from '../../shared/utility';
 import {connect} from 'react-redux';
 import * as actions from '../../Store/Actions/index';
 
+const initialState={
+    lastAmount:0,
+    operation:null,
+    before:null,
+    lastWasOperation:false
+};
+
+const calculatorReducer=(calculationState=initialState, action)=>{
+    switch (action.type) {
+        case "onSetLastAmount":
+            console.log('anyád');return {...calculationState, lastAmount:action.lastAmount};
+        case "onSetOperation":
+            return {...calculationState, operation:action.operation};
+        case "onSetBefore":
+            return {...calculationState, before:action.before};
+        case "onSetLastWasOperation":
+            return {...calculationState, lastWasOperation:action.lastWasOperation};
+    
+        default: 
+             throw new Error(action.type);
+    }
+};
+
 const Calculator =props=>{
-    const {amount, token, userId, onAboutToSave, onSave, onSetAmount, aboutToSave}=props;
+    const {amount, token, userId, aboutToSave, onAboutToSave, onSave, onSetAmount}=props;
 
     const [isValidAmount,setIsValidAmount]=useState(true);
     const [isValidBefore,setIsValidBefore]=useState(true);
     const [ableToSave,setAbleToSave]=useState(false);
 
-    const [lastAmount, onSetLastAmount]=useState(0);
-    const [operation, onSetOperation]=useState(null);
-    const [before, onSetBefore]=useState(null);
-    const [lastWasOperation, onSetLastWasOperation]=useState(false);
+    const [calculationState, dispatch]=useReducer(calculatorReducer,initialState);
 
     const isNumber=(arr)=>{ return arr[0] === "NUMBER"; };
     const isOp=(arr)=>{ return arr[0] === "OPERATIONS" };
@@ -52,65 +72,70 @@ const Calculator =props=>{
     const numberIsNext=(val)=>{
         if(!amount){ 
             onSetAmount(val); 
-            onSetLastWasOperation(false); 
+            dispatch({type:"onSetLastWasOperation", operation:false}); 
         } else if(
             amount.length<14){
             const actAmount = amount + val;
             onSetAmount(actAmount); 
-            onSetLastWasOperation(false);
+            dispatch({type:"onSetLastWasOperation", operation:false}); 
         };
     };
 
     const typicOperation=(val)=>{
         let operation='';
         switch (val) {
-            case 'DIVIDE_SPEC':onSetOperation('DIVIDE_SPEC'); operation='%'; onSetBefore(Number(amount).toString()+'%');
+            case 'DIVIDE_SPEC': dispatch({type:"onSetOperation", operation:'DIVIDE_SPEC'}); operation='%'; 
+                                dispatch({type:"onSetBefore", before:(Number(amount).toString()+'%')});
                 break;
-            case 'DIVIDE':onSetOperation('DIVIDE'); operation='/'; onSetBefore(Number(amount).toString()+'/');
+            case 'DIVIDE':  dispatch({type:"onSetOperation", operation:'DIVIDE'}); operation='/'; 
+                            dispatch({type:"onSetBefore", before:(Number(amount).toString()+'/')});
                 break;
-            case 'X':onSetOperation('X'); operation='*'; onSetBefore(Number(amount).toString()+'*');
+            case 'X':       dispatch({type:"onSetOperation", operation:'X'}); operation='*'; 
+                            dispatch({type:"onSetBefore", before:(Number(amount).toString()+'*')});
                 break;
-            case 'NEG':onSetOperation('NEG'); operation='-'; onSetBefore(Number(amount).toString()+'-');
+            case 'NEG':     dispatch({type:"onSetOperation", operation:'NEG'}); operation='-'; 
+                            dispatch({type:"onSetBefore", before:(Number(amount).toString()+'-')});
                 break;
-            case 'PLUS':onSetOperation('PLUS'); operation='+'; onSetBefore(Number(amount).toString()+'+');
+            case 'PLUS':    dispatch({type:"onSetOperation", operation:'PLUS'}); operation='+'; 
+                            dispatch({type:"onSetBefore", before:(Number(amount).toString()+'+')});
                 break;
             case 'CHANGE': 
                 return changeOperation();
             default: 
                 throw new Error('Hiba a Calculator.js : typicOperation-nál');
         }
-        if(lastWasOperation){
-            onSetBefore(Number(lastAmount).toString()+operation);
-            onSetLastWasOperation(true);
+        if(calculationState.lastWasOperation){
+            dispatch({type:"onSetBefore", before:(Number(calculationState.lastAmount).toString()+operation)});
+            dispatch({type:"onSetLastWasOperation", operation:true});
         }else{
-            onSetLastWasOperation(true);
-            onSetLastAmount(amount);
+            dispatch({type:"onSetLastWasOperation", operation:true});
+            dispatch({type:"onSetLastAmount", lastAmount:amount});
             onSetAmount(0);
         }
     };
 
     const equalOperation=()=>{
         const a= +amount;
-        const lastAm= +lastAmount;
-        const op= operation;
+        const lastAm= +calculationState.lastAmount;
+        const op= calculationState.operation;
         let res=null;
         switch (op) {
-            case 'PLUS': res=lastAm+a; onSetBefore(Number(lastAm).toString()+'+'+a);
+            case 'PLUS': res=lastAm+a; dispatch({type:"onSetBefore", before:Number(lastAm).toString()+'+'+a});
                 break;
-            case 'NEG': res=lastAm-a; onSetBefore(Number(lastAm).toString()+'-'+a);
+            case 'NEG': res=lastAm-a; dispatch({type:"onSetBefore", before:Number(lastAm).toString()+'-'+a});
                 break;
-            case 'X': res=lastAm*a; onSetBefore(Number(lastAm).toString()+'*'+a);
+            case 'X': res=lastAm*a; dispatch({type:"onSetBefore", before:Number(lastAm).toString()+'*'+a});
                 break;
-            case 'DIVIDE': res=lastAm/a; onSetBefore(Number(lastAm).toString()+'/'+a);
+            case 'DIVIDE': res=lastAm/a; dispatch({type:"onSetBefore", before:Number(lastAm).toString()+'/'+a});
                 break;
-            case 'DIVIDE_SPEC': res=lastAm%a; onSetBefore(Number(lastAm).toString()+'%'+a);
+            case 'DIVIDE_SPEC': res=lastAm%a; dispatch({type:"onSetBefore", before:Number(lastAm).toString()+'%'+a});
                 break;
             default:
                 return res=a;
         };
-        onSetLastAmount(a);
+        dispatch({type:"onSetLastAmount", lastAmount:a});
         onSetAmount(res);
-        onSetLastWasOperation(false);
+        dispatch({type:"onSetLastWasOperation", lastWasOperation:false});
         onAboutToSave(false);
 
         if(a){setAbleToSave(true);}
@@ -119,21 +144,21 @@ const Calculator =props=>{
     const backOperation=()=>{
         if(amount.length>1){
             onSetAmount(amount.substring(0,amount.length-1));
-            onSetBefore(null);
+            dispatch({type:"onSetBefore", before:null});
         }else{
             onSetAmount(0);
-            onSetBefore(null);
+            dispatch({type:"onSetBefore", before:null});
         }
-        onSetOperation(null);
-        onSetLastWasOperation(false);
+        dispatch({type:"onSetOperation", operation:null});
+        dispatch({type:"onSetLastWasOperation", lastWasOperation:false});
     };
 
     const cancelOperation=()=>{
         onSetAmount(0);
-        onSetLastAmount(0);
-        onSetOperation(null);
-        onSetBefore(null);
-        onSetLastWasOperation(false);
+        dispatch({type:"onSetLastAmount", lastAmount:0});
+        dispatch({type:"onSetOperation", operation:null});
+        dispatch({type:'onSetBefore', before:null});
+        dispatch({type:"onSetLastWasOperation", lastWasOperation:false});
     };
 
     const commaOperation=()=>{
@@ -154,9 +179,9 @@ const Calculator =props=>{
     useEffect(()=>{
         if(amount && amount.toString().length>15){ setIsValidAmount(false); } 
             else { setIsValidAmount(true); };
-        if(before && before.toString().length>20){ setIsValidBefore(false); }
+        if(calculationState.before && calculationState.before.toString().length>20){ setIsValidBefore(false); }
             else{ setIsValidBefore(true); };
-    },[amount,before]);
+    },[amount,calculationState.before]);
 
     useEffect(()=>{
         if(aboutToSave){
@@ -178,14 +203,14 @@ const Calculator =props=>{
     };
 
     let am= amount? replace(amount,".",","):0;
-    let bef= before? replace(before,".",","):null; 
+    let bef= calculationState.before? replace(calculationState.before,".",","):null; 
     if(!isValidAmount){
         am= amount? amount.toString().substring(0,15).replace(".",",")+'!!!': 0;
     };
     //charReplace is because of the double numbers!
     if(amount && !isValidNumber(replace(amount,",","9"))){am= "Hibás számítás!";}; 
     if(!isValidBefore){
-        bef= before? replace(before.toString().substring(0,20),".",","):null;
+        bef= calculationState.before? replace(calculationState.before.toString().substring(0,20),".",","):null;
     };
 
     let monitor=<Monitor amount={am} before={bef} />;

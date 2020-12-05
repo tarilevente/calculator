@@ -113,8 +113,8 @@ export const fetchSelectedResult=(uid,token,rid)=>{
                         id:key
                     });
                 }
-                let selectedResult=fetchedResults.filter(e=>e.id===rid);
-                dispatch(fetchSelectedResultSuccess(selectedResult[0]));
+                let selectedResult=fetchedResults.find(e=>e.id===rid);
+                dispatch(fetchSelectedResultSuccess(selectedResult));
             })
             .catch(err=>{
                 dispatch(fetchSelectedResultFailed(err));
