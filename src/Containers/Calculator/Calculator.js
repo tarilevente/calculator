@@ -13,7 +13,7 @@ import * as actions from '../../Store/Actions/index';
 import {Redirect} from 'react-router-dom';
 
 const Calculator =props=>{
-    const {amount, lastAmount, before, operation, lastWasOperation, token, userId, redirectPath, onAboutToSave, onSave, aboutToSave}=props;
+    const {amount, lastAmount, before, operation, lastWasOperation, token, userId, onAboutToSave, onSave, aboutToSave}=props;
 
     const [isValidAmount,setIsValidAmount]=useState(true);
     const [isValidBefore,setIsValidBefore]=useState(true);
@@ -154,6 +154,15 @@ const Calculator =props=>{
             else{ setIsValidBefore(true); };
     },[amount,before]);
 
+    useEffect(()=>{
+        if(aboutToSave){
+            //redirect nincs megoldva
+            onSave(amount,userId,token);
+            onAboutToSave(false);
+            props.history.push("/results");
+        }
+    });
+    
     const saveHandler=(event)=>{
         event.preventDefault();
         if(props.isAuthenticated){
@@ -189,19 +198,10 @@ const Calculator =props=>{
 
     let controls=<Controls clicked={clickedHandler}/>;
     if(props.resultLoading){controls=<Spinner />;}
-
-    let redirect=null;
-    if(aboutToSave){ 
-        // debugger;
-        redirect=<Redirect to={redirectPath} />; 
-        onAboutToSave(false);
-        onSave(amount,userId,token);
-    }
     
     return(
         <div>
             <div className={classes.Content}>
-                {redirect}
                 {monitor}
                 {controls}
             </div>
@@ -221,8 +221,7 @@ const mapStateToProps=state=>{
         userId:state.auth.userId,
         resultLoading:state.results.loading,
         isAuthenticated:state.auth.token!==null,
-        aboutToSave:state.calculator.aboutToSave,
-        redirectPath:state.auth.authRedirectPath
+        aboutToSave:state.calculator.aboutToSave
     };
 };
 

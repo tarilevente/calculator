@@ -16,5 +16,6 @@ export {
 
 export{
     saveResult,
-    fetchResults
+    fetchResults,
+    fetchSelectedResult
 } from './Results'
