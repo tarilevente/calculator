@@ -4,6 +4,7 @@ import {updateObject} from '../../shared/utility';
 const initialState={
     loading: false,
     results: [],
+    selectedResult:null,
     error:null
 };
 
@@ -46,6 +47,26 @@ const fetchResultsFailed=(state, action)=>{
         error:action.err
     });
 };
+const fetchSelectedResultStart=(state, action)=>{
+    return updateObject(state,{
+        loading:true
+    });
+};
+
+const fetchSelectedResultSuccess=(state, action)=>{
+    return updateObject(state,{
+        loading:false,
+        selectedResult:action.res,
+        error:null
+    });
+};
+
+const fetchSelectedResultFailed=(state, action)=>{
+    return updateObject(state,{
+        loading:false,
+        error:action.err
+    });
+};
 
 const reducer=(state=initialState,action)=>{
     switch (action.type) {
@@ -55,6 +76,9 @@ const reducer=(state=initialState,action)=>{
         case actions.FETCH_RES_START: return fetchResultsStart(state, action);
         case actions.FETCH_RES_SUCCESS: return fetchResultsSuccess(state, action);
         case actions.FETCH_RES_FAILED: return fetchResultsFailed(state, action);
+        case actions.FETCH_SINGLE_RES_START: return fetchSelectedResultStart(state, action);
+        case actions.FETCH_SINGLE_RES_SUCCESS: return fetchSelectedResultSuccess(state, action);
+        case actions.FETCH_SINGLE_RES_FAILED: return fetchSelectedResultFailed(state, action);
 
         default:
             return state;

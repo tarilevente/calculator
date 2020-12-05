@@ -5,6 +5,7 @@ import {Route, Switch, withRouter, Redirect} from 'react-router-dom';
 import Calculator from './Containers/Calculator/Calculator';
 import Logout from './Containers/Auth/Logout/Logout';
 import Results from './Containers/Results/Results';
+import SelectedResult from './Containers/Results/SelectedResult/SelectedResult';
 
 import {connect} from 'react-redux';
 import * as actions from './Store/Actions';
@@ -30,8 +31,9 @@ const App=(props)=> {
   if(props.isAuthenticated){
     routes=(
       <Switch>
-        <Route path="/logout" component={Logout} />
-        <Route path="/results" component={Results} />
+        <Route path="/logout" exact component={Logout} />
+        <Route path="/results" exact component={Results} />
+        <Route path={"/result/:id"} exact component={SelectedResult} />
         <Route path="/" exact component={Calculator} />
         <Redirect to="/" />
       </Switch>

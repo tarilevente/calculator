@@ -80,3 +80,44 @@ export const fetchResults=(uid,token)=>{
             });
     };
 };
+
+export const fetchSelectedResultStart=()=>{
+    return{
+        type:actions.FETCH_SINGLE_RES_START
+    };
+};
+
+export const fetchSelectedResultSuccess=(res)=>{
+    return{
+        type:actions.FETCH_SINGLE_RES_SUCCESS,
+        res:res
+    };
+};
+
+export const fetchSelectedResultFailed=(err)=>{
+    return{
+        type:actions.FETCH_SINGLE_RES_FAILED,
+        err:err
+    };
+};
+export const fetchSelectedResult=(uid,token,rid)=>{
+    return dispatch=>{
+        dispatch(fetchSelectedResultStart());
+        const queryParams='?auth='+token+'&orderBy="userId"&equalTo="'+uid+'"';
+        axios.get('/results.json'+queryParams)
+            .then(res=>{
+                let fetchedResults=[];
+                for(let key in res.data){
+                    fetchedResults.push({
+                        ...res.data[key],
+                        id:key
+                    });
+                }
+                let selectedResult=fetchedResults.filter(e=>e.id===rid);
+                dispatch(fetchSelectedResultSuccess(selectedResult[0]));
+            })
+            .catch(err=>{
+                dispatch(fetchSelectedResultFailed(err));
+            });
+    };
+};
