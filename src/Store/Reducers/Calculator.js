@@ -3,31 +3,11 @@ import {updateObject} from '../../shared/utility';
 
 const initialState={
     amount:0,
-    lastAmount:0,
-    operation:null,
-    before:null,
-    lastWasOperation:false,
     aboutToSave:false
 };
 
 const setAmount=(state, action)=>{
     return updateObject(state, {amount: action.amount});
-};
-
-const setLastAmount=(state, action)=>{
-    return updateObject(state, {lastAmount: action.lastAmount});
-};
-
-const setBefore=(state, action)=>{
-    return updateObject(state, {before: action.before});
-};
-
-const setOperation=(state, action)=>{
-    return updateObject(state, {operation: action.operation});
-};
-
-const setLastWasOperation=(state, action)=>{
-    return updateObject(state, {lastWasOperation:action.bool});
 };
 
 const setAboutToSave=(state, action)=>{

@@ -1,17 +1,12 @@
 export {
     setAmount,
-    setLastAmount,
-    setBefore,
-    setOperation,
-    setLastWasOperation,
     aboutToSave
 } from './Calculator';
 
 export {
     auth,
     authCheckState,
-    logout,
-    setRedirectPath
+    logout
 } from './Auth';
 
 export{

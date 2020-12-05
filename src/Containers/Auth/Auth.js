@@ -127,15 +127,13 @@ const mapStateToProps=state=>{
         loading:state.auth.loading,
         error:state.auth.error,
         isAuthenticated:state.auth.token!==null,
-        aboutToSave:state.calculator.aboutToSave,
-        getAuthRedirectPath:state.auth.authRedirectPath
+        aboutToSave:state.calculator.aboutToSave
     };
 };
 
 const mapDispatchToProps=dispatch=>{
     return{
-        onAuth:(mail,pwd,isSign)=>dispatch(actions.auth(mail,pwd,isSign)),
-        onSetAuthRedirectPath:(path)=>dispatch(actions.setRedirectPath(path)),
+        onAuth:(mail,pwd,isSign)=>dispatch(actions.auth(mail,pwd,isSign))
     };
 };
 

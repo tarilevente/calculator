@@ -87,10 +87,3 @@ export const authCheckState=()=>{
         };
     };
 };
-
-export const setRedirectPath=(path)=>{
-    return{
-        type:actionTypes.SET_AUTH_REDIRECT_PATH,
-        path:path
-    };
-};

@@ -4,11 +4,12 @@ import classes from './Results.module.css';
 import Result from './Result/Result';
 import * as actions from '../../Store/Actions/index';
 import Spinner from '../../Components/UI/Spinner/Spinner';
+import Modal from '../../Components/UI/Modal/Modal';
 
 import {Link} from 'react-router-dom';
 
 const Results=props=>{
-    const {onFetchResults, results, error, uid, loading, token, selectedResult}=props;
+    const {onFetchResults, results, error, uid, loading, token}=props;
 
     useEffect(()=>{
         onFetchResults(uid, token);
@@ -16,6 +17,10 @@ const Results=props=>{
 
     const selectedHandler=rid=>{
         props.onFetchSelectedResult(uid, token, rid);
+    };
+
+    const modalClosedHandler=()=>{
+        props.history.push('/');
     };
 
     let res=<Spinner />;
@@ -33,7 +38,10 @@ const Results=props=>{
         });
     } 
     if(error){
-        res=<p>{error.response.data.error}</p>;
+        res=(
+            <Modal show={error!==null} modalClosed={modalClosedHandler}>
+                {error.message}
+            </Modal>);
     }
     return(
         <div className={classes.Results}>
