@@ -1,25 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import classes from './SelectedResult.module.css';
-import {connect} from 'react-redux';
+
 import Spinner from '../../../Components/UI/Spinner/Spinner';
-import { dateFormat } from '../../../shared/utility';
+import DataPage from '../SelectedResult/DataPage/DataPage';
+import {connect} from 'react-redux';
+import {Link,Route} from 'react-router-dom';
 
 const SelectedResult=props=>{
-    const { match: { params: { id } }} = props;
     const {selectedResult,loading} =props;
-    // console.log(match);
-    // const id=match.params.id;
-    // const id=props.match.params.id;
 
-    
     let res=<Spinner />;
     if(!loading){
-        const [d,i]=dateFormat(selectedResult.date);
         res=(
             <>
                 <h1>Result: {selectedResult.result}</h1>
-                <h3>Date: {d}</h3>
-                <h3>Time: {i}</h3>
+                <Link to={props.match.url+'/data/date'} >Date</Link><br/>
+                <Link to={props.match.url+'/data/time'} >Time</Link><br/>
+                <Route path={`${props.match.path}/data/:dataName`} exact render={()=><DataPage res={selectedResult.date}/>} /> 
             </>
         );
     };

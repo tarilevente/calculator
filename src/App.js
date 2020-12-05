@@ -33,9 +33,9 @@ const App=(props)=> {
       <Switch>
         <Route path="/logout" exact component={Logout} />
         <Route path="/results" exact component={Results} />
-        <Route path={"/result/:id"} exact component={SelectedResult} />
+        <Route path={"/result/:id"} component={SelectedResult} />
         <Route path="/" exact component={Calculator} />
-        <Redirect to="/" />
+        {/* <Redirect to="/" /> */}
       </Switch>
     );
   }
