@@ -8,7 +8,6 @@ const DataPage=props=>{
     const data=props.match.params.dataName==='time'?i:d;
     return(
         <div className={classes.DataPage}>
-            <h3>Data Page</h3>
             <h4>{data}</h4>
         </div>
     );

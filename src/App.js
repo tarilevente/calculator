@@ -35,7 +35,7 @@ const App=(props)=> {
         <Route path="/results" exact component={Results} />
         <Route path={"/result/:id"} component={SelectedResult} />
         <Route path="/" exact component={Calculator} />
-        {/* <Redirect to="/" /> */}
+        <Redirect from="/auth" to="/" />
       </Switch>
     );
   }

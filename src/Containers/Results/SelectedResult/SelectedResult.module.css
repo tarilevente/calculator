@@ -1,7 +1,49 @@
 .SelectedResult{
     position: relative;
-    margin:70px 10px;
+    margin: 65px auto;
     height:70px;
     width: 300px;
-    left:50%;
+    text-align: center;
+}
+
+.ButtonDiv{
+    display: flex;
+    justify-content: space-around;
+    padding:5px;
+    box-sizing: border-box;
+}
+
+.SelectedResult a{
+    display:inline-block;
+    padding:0.2em 1.45em;
+    margin:0.1em;
+    border:0.15em solid #CCCCCC;
+    box-sizing: border-box;
+    text-decoration:none;
+    font-family:'Segoe UI','Roboto',sans-serif;
+    font-weight:400;
+    color:#000000;
+    background-color:#CCCCCC;
+    text-align:center;
+    position:relative;
+    cursor: pointer;
+}
+
+.SelectedResult a:hover{
+    border-color: orange;
+}
+
+.SelectedResult a:active{
+    background-color:#999999;
+}
+
+@media all and (max-width:30em){
+    .SelectedResult a{
+       display:block;
+       margin:0.2em auto;
+    }
+}
+
+.ButtonDiv a:hover{
+    border-color:#7a7a7a !important;
 }

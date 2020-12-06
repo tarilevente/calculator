@@ -5,7 +5,8 @@ const initialState={
     loading: false,
     results: [],
     selectedResult:null,
-    error:null
+    error:null,
+    hide:false
 };
 
 const saveResStart=(state, action)=>{
@@ -68,6 +69,10 @@ const fetchSelectedResultFailed=(state, action)=>{
     });
 };
 
+const hideChange=(state, action)=>{
+    return updateObject(state,{hide:action.bool});
+};
+
 const reducer=(state=initialState,action)=>{
     switch (action.type) {
         case actions.SAVE_RES_START: return saveResStart(state, action);
@@ -79,6 +84,7 @@ const reducer=(state=initialState,action)=>{
         case actions.FETCH_SINGLE_RES_START: return fetchSelectedResultStart(state, action);
         case actions.FETCH_SINGLE_RES_SUCCESS: return fetchSelectedResultSuccess(state, action);
         case actions.FETCH_SINGLE_RES_FAILED: return fetchSelectedResultFailed(state, action);
+        case actions.HIDE_CHANGE: return hideChange(state, action);
 
         default:
             return state;

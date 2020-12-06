@@ -64,7 +64,7 @@ export const fetchResults=(uid,token)=>{
     return dispatch=>{
         dispatch(fetchResultsStart());
         const queryParams='?auth='+token+'&orderBy="userId"&equalTo="'+uid+'"';
-        axios.get('/results.json'+queryParams) //'orderBy="userId"&equalTo="'+uid+'"'
+        axios.get('/results.json'+queryParams) 
             .then(res=>{
                 let fetchedResults=[];
                 for(let key in res.data){

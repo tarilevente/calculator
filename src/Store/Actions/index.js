@@ -1,9 +1,4 @@
 export {
-    setAmount,
-    aboutToSave
-} from './Calculator';
-
-export {
     auth,
     authCheckState,
     logout

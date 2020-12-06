@@ -33,10 +33,8 @@ const store=createStore(rootReducer, composeEnhancers(
 
 const app=(
   <Provider store={store}>
-    <BrowserRouter>
-      <React.StrictMode>
+    <BrowserRouter basename="/">
         <App />
-      </React.StrictMode>
     </BrowserRouter>
   </Provider>
 );

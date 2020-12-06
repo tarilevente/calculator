@@ -10,6 +10,7 @@ import {charReplace as replace} from '../../shared/utility';
 
 import {connect} from 'react-redux';
 import * as actions from '../../Store/Actions/index';
+import * as actionTypes from '../../Store/Actions/ActionTypes';
 
 const initialState={
     lastAmount:0,
@@ -21,14 +22,13 @@ const initialState={
 const calculatorReducer=(calculationState=initialState, action)=>{
     switch (action.type) {
         case "onSetLastAmount":
-            console.log('anyád');return {...calculationState, lastAmount:action.lastAmount};
+            return {...calculationState, lastAmount:action.lastAmount};
         case "onSetOperation":
             return {...calculationState, operation:action.operation};
         case "onSetBefore":
             return {...calculationState, before:action.before};
         case "onSetLastWasOperation":
             return {...calculationState, lastWasOperation:action.lastWasOperation};
-    
         default: 
              throw new Error(action.type);
     }
@@ -251,9 +251,9 @@ const mapStateToProps=state=>{
 
 const mapDispatchToProps=dispatch=>{
     return{
-        onSetAmount:(am)=>dispatch(actions.setAmount(am)), //action creators miatt NEM {type:"...", amount:am}// A return (JSObj lesz dispatch-elve)
+        onSetAmount:(am)=>dispatch({type:actionTypes.SET_AMOUNT, amount: am}), 
         onSave:(res,uid,token)=>dispatch(actions.saveResult(res,uid,token)),
-        onAboutToSave:(bool)=>dispatch(actions.aboutToSave(bool))
+        onAboutToSave:(bool)=>dispatch({type:actionTypes.ABOUT_TO_SAVE, bool:bool})
     };
 };
 

@@ -1,12 +1,15 @@
 import React,{useEffect} from 'react';
-import  {connect} from 'react-redux';
 import classes from './Results.module.css';
+
 import Result from './Result/Result';
-import * as actions from '../../Store/Actions/index';
 import Spinner from '../../Components/UI/Spinner/Spinner';
 import Modal from '../../Components/UI/Modal/Modal';
+import Hide from '../../Components/UI/Hide/Hide';
 
+import  {connect} from 'react-redux';
+import * as actions from '../../Store/Actions/index';
 import {Link} from 'react-router-dom';
+import * as actionTypes from '../../Store/Actions/ActionTypes';
 
 const Results=props=>{
     const {onFetchResults, results, error, uid, loading, token}=props;
@@ -37,16 +40,29 @@ const Results=props=>{
                 </Link>
             );
         });
-    } 
+    };
+
     if(error){
         res=(
             <Modal show={error!==null} modalClosed={modalClosedHandler}>
                 {error.message}
             </Modal>);
+    };
+
+    const hideHandler=(e)=>{
+        e.preventDefault();
+        props.onHideChange(!props.hide);
+    };
+
+    let hide=null;
+    if(!loading && !error){
+        hide=<Hide hideHandler={hideHandler} hide={props.hide}/>
     }
+
     return(
         <div className={classes.Results}>
             <h2>My results</h2>
+            {hide}
             {res}            
         </div>
     );
@@ -58,14 +74,16 @@ const mapStateToProps=state=>{
         results:state.results.results,
         loading:state.results.loading,
         error:state.results.error,
-        token:state.auth.token
+        token:state.auth.token,
+        hide:state.results.hide
     };
 };
 
 const mapDispatchToProps=dispatch=>{
     return{
         onFetchResults:(uid,token)=>dispatch(actions.fetchResults(uid,token)),
-        onFetchSelectedResult:(uid,token,rid)=>dispatch(actions.fetchSelectedResult(uid,token,rid))
+        onFetchSelectedResult:(uid,token,rid)=>dispatch(actions.fetchSelectedResult(uid,token,rid)),
+        onHideChange:(bool)=>dispatch({type:actionTypes.HIDE_CHANGE, bool:bool})
     };
 };
 

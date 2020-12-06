@@ -14,21 +14,24 @@ const SelectedResult=props=>{
         res=(
             <>
                 <h1>Result: {selectedResult.result}</h1>
-                <Link to={props.match.url+'/data/date'} >Date</Link><br/>
-                <Link to={props.match.url+'/data/time'} >Time</Link><br/>
+                <div className={classes.ButtonDiv}>
+                    <Link to={props.match.url+'/data/date'} >Date</Link>
+                    <Link to={props.match.url+'/data/time'} >Time</Link>
+                </div>
                 <Route path={`${props.match.path}/data/:dataName`} exact render={()=><DataPage res={selectedResult.date}/>} /> 
             </>
         );
     };
 
-    const backHandler=()=>{
+    const backHandler=(e)=>{
+        e.preventDefault();
         props.history.push('/results');
     };
 
     return(
             <div className={classes.SelectedResult}>
                 {res}
-                <button onClick={backHandler} >Back</button>
+                <a href="/results" onClick={backHandler} >Back</a>
             </div>
     );
 };

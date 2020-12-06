@@ -1,7 +1,6 @@
 import React from 'react';
 import classes from './Result.module.css';
 import {dateFormat} from '../../../shared/utility';
-import {Link} from 'react-router-dom';
 
 const Result = props =>{
     const [d,i]=dateFormat(props.date);
