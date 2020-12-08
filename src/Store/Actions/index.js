@@ -1,11 +1,27 @@
 export {
     auth,
     authCheckState,
-    logout
+    logout,
+    logoutSucceed,
+    authStart,
+    authSuccess,
+    checkAuthTimeout,
+    authFail
 } from './Auth';
 
 export{
+    saveResultStart,
     saveResult,
+    saveSuccess,
+    saveFailed,
+
+    fetchResultsStart,
+    fetchResultsSuccess,
+    fetchResultsFailed,
     fetchResults,
-    fetchSelectedResult
+
+    fetchSelectedResult,
+    fetchSelectedResultStart,
+    fetchSelectedResultSuccess,
+    fetchSelectedResultFailed
 } from './Results'
