@@ -55,3 +55,30 @@ export const dateFormat=(datum)=>{
 
     return [d,i];
 };
+
+export const isNumber=(arr)=>{ return arr[0] === "NUMBER"; };
+export const isOp=(arr)=>{ return arr[0] === "OPERATIONS" };
+export const isBackCat=(arr)=>{ return arr[1] === "BACK" };
+export const isBackOp=(val)=>{ return val === "BACK"};
+export const isCancelOp=(val)=>{ return val === "CANCEL"};
+export const isComma=(arr)=>{ return arr[1] === "COMMA" };
+export const isEqual=(arr)=>{ return arr[1] === "EQUAL" };
+export const isTypicOp=(arr)=>{ return arr[1] === "TYPIC_OPERATIONS" };
+
+export const switchOp=(val)=>{
+    switch (val) {
+        case 'DIVIDE_SPEC': return{method:"onSetOperation", op:'DIVIDE_SPEC', opSign:'%'}; 
+        case 'DIVIDE':  return{method:"onSetOperation", op:'DIVIDE', opSign:'/'}; 
+        case 'X':       return{method:"onSetOperation", op:'X', opSign:'*'}; 
+        case 'NEG':     return{method:"onSetOperation", op:'NEG', opSign:'-'}; 
+        case 'PLUS':    return{method:"onSetOperation", op:'PLUS', opSign:'+'}; 
+        case 'CHANGE':  return {method:"CHANGE", operation:null, opSign:null};
+        default: 
+            throw new Error('Hiba a Calculator.js : typicOperation-nál');
+    }
+}
+
+
+export const isValidNumber=(num)=>{
+    return typeof +num == 'number' && isFinite(num);
+};

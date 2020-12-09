@@ -6,11 +6,13 @@ import Monitor from '../../Components/Calculator/Monitor/Monitor';
 import Button from '../../Components/UI/Button/Button';
 import Spinner from '../../Components/UI/Spinner/Spinner';
 
-import {charReplace as replace} from '../../shared/utility';
+import { charReplace as replace, isNumber, isOp, isBackCat, isBackOp, isCancelOp, isComma, isEqual, isTypicOp, switchOp, isValidNumber} from '../../shared/utility';
 
 import {connect} from 'react-redux';
 import * as actions from '../../Store/Actions/index';
 import * as actionTypes from '../../Store/Actions/ActionTypes';
+
+import propTypes from 'prop-types';
 
 const initialState={
     lastAmount:0,
@@ -43,15 +45,6 @@ const Calculator =props=>{
 
     const [calculationState, dispatch]=useReducer(calculatorReducer,initialState);
 
-    const isNumber=(arr)=>{ return arr[0] === "NUMBER"; };
-    const isOp=(arr)=>{ return arr[0] === "OPERATIONS" };
-    const isBackCat=(arr)=>{ return arr[1] === "BACK" };
-    const isBackOp=(val)=>{ return val === "BACK"};
-    const isCancelOp=(val)=>{ return val === "CANCEL"};
-    const isComma=(arr)=>{ return arr[1] === "COMMA" };
-    const isEqual=(arr)=>{ return arr[1] === "EQUAL" };
-    const isTypicOp=(arr)=>{ return arr[1] === "TYPIC_OPERATIONS" };
-
     const clickedHandler=(cat,val)=>{
         setAbleToSave(false);
         if(isNumber(cat)){  return numberIsNext(val); }; 
@@ -83,27 +76,16 @@ const Calculator =props=>{
 
     const typicOperation=(val)=>{
         let operation='';
-        switch (val) {
-            case 'DIVIDE_SPEC': dispatch({type:"onSetOperation", operation:'DIVIDE_SPEC'}); operation='%'; 
-                                dispatch({type:"onSetBefore", before:(Number(amount).toString()+'%')});
-                break;
-            case 'DIVIDE':  dispatch({type:"onSetOperation", operation:'DIVIDE'}); operation='/'; 
-                            dispatch({type:"onSetBefore", before:(Number(amount).toString()+'/')});
-                break;
-            case 'X':       dispatch({type:"onSetOperation", operation:'X'}); operation='*'; 
-                            dispatch({type:"onSetBefore", before:(Number(amount).toString()+'*')});
-                break;
-            case 'NEG':     dispatch({type:"onSetOperation", operation:'NEG'}); operation='-'; 
-                            dispatch({type:"onSetBefore", before:(Number(amount).toString()+'-')});
-                break;
-            case 'PLUS':    dispatch({type:"onSetOperation", operation:'PLUS'}); operation='+'; 
-                            dispatch({type:"onSetBefore", before:(Number(amount).toString()+'+')});
-                break;
-            case 'CHANGE': 
-                return changeOperation();
-            default: 
-                throw new Error('Hiba a Calculator.js : typicOperation-nál');
+
+        const {method, op, opSign}=switchOp(val);
+        if(method!=='CHANGE'){
+            operation=opSign;
+            dispatch({type:method, operation:op}); 
+            dispatch({type:"onSetBefore", before:(Number(amount).toString()+opSign)});
+        }else{
+            changeOperation();
         }
+
         if(calculationState.lastWasOperation){
             dispatch({type:"onSetBefore", before:(Number(calculationState.lastAmount).toString()+operation)});
             dispatch({type:"onSetLastWasOperation", operation:true});
@@ -119,6 +101,7 @@ const Calculator =props=>{
         const lastAm= +calculationState.lastAmount;
         const op= calculationState.operation;
         let res=null;
+
         switch (op) {
             case 'PLUS': res=lastAm+a; dispatch({type:"onSetBefore", before:Number(lastAm).toString()+'+'+a});
                 break;
@@ -172,10 +155,6 @@ const Calculator =props=>{
         onSetAmount(-amount);
     };    
 
-    const isValidNumber=(num)=>{
-        return typeof +num == 'number' && isFinite(num);
-    };
-
     useEffect(()=>{
         if(amount && amount.toString().length>15){ setIsValidAmount(false); } 
             else { setIsValidAmount(true); };
@@ -185,7 +164,6 @@ const Calculator =props=>{
 
     useEffect(()=>{
         if(aboutToSave){
-            //redirect nincs megoldva
             onSave(amount,userId,token);
             onAboutToSave(false);
             props.history.push("/results");
@@ -207,7 +185,7 @@ const Calculator =props=>{
     if(!isValidAmount){
         am= amount? amount.toString().substring(0,15).replace(".",",")+'!!!': 0;
     };
-    //charReplace is because of the double numbers!
+    //charReplace is because of the double-type numbers!
     if(amount && !isValidNumber(replace(amount,",","9"))){am= "Hibás számítás!";}; 
     if(!isValidBefore){
         bef= calculationState.before? replace(calculationState.before.toString().substring(0,20),".",","):null;
@@ -236,6 +214,16 @@ const Calculator =props=>{
             {save}
         </div>
     );
+};
+
+Calculator.propTypes ={
+    onSetAmount:propTypes.func,
+    onSave:propTypes.func,
+    onAboutToSave:propTypes.func,
+    amount:propTypes.number,
+    resultLoading: propTypes.bool,
+    isAuthenticated: propTypes.bool,
+    aboutToSave: propTypes.bool
 };
 
 const mapStateToProps=state=>{

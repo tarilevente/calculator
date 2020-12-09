@@ -1,7 +1,7 @@
 import React from 'react';
 import classes from './Input.module.css';
 
-const Input = props =>{
+const Input = React.forwardRef((props,ref) =>{
     let inputElement=null;
     const inputClasses=[classes.InputElement];
 
@@ -11,7 +11,8 @@ const Input = props =>{
                 className={inputClasses.join(' ')}
                 {...props.elementConfig} 
                 value={props.value}
-                onChange={props.changed}/>
+                onChange={props.changed}
+                ref={ref}/>
             break;
     
         case  'select' :
@@ -34,7 +35,8 @@ const Input = props =>{
                 className={inputClasses.join(' ')} 
                 {...props.elementConfig}
                 value={props.value}
-                onChange={props.changed}/>
+                onChange={props.changed}
+                ref={ref}/>
             break;
     }
     return(
@@ -43,6 +45,6 @@ const Input = props =>{
             {inputElement}
         </div>
     );
-};
+});
 
 export default Input;
