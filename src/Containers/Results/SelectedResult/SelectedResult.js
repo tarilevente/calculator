@@ -4,7 +4,8 @@ import classes from './SelectedResult.module.css';
 import Spinner from '../../../Components/UI/Spinner/Spinner';
 import DataPage from '../SelectedResult/DataPage/DataPage';
 import {connect} from 'react-redux';
-import {Link,Route} from 'react-router-dom';
+import {Route} from 'react-router-dom';
+import NavigationItem from '../../../Components/Navigation/NavigationItems/NavigationItem/NavigationItem';
 
 const SelectedResult=props=>{
     const {selectedResult,loading} =props;
@@ -15,8 +16,12 @@ const SelectedResult=props=>{
             <>
                 <h1>Result: {selectedResult.result}</h1>
                 <div className={classes.ButtonDiv}>
-                    <Link to={props.match.url+'/data/date'} >Date</Link>
-                    <Link to={props.match.url+'/data/time'} >Time</Link>
+                    <NavigationItem 
+                        link={props.match.url+'/data/date'}
+                        exact={true} >Date</NavigationItem>
+                    <NavigationItem 
+                        link={props.match.url+'/data/time'} 
+                        exact={true}>Time</NavigationItem>
                 </div>
                 <Route path={`${props.match.path}/data/:dataName`} exact render={()=><DataPage res={selectedResult.date}/>} /> 
             </>

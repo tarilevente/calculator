@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import classes from './Auth.module.css';
 import {updateObject, checkValidity} from '../../shared/utility';
@@ -56,7 +56,6 @@ const Auth=props=>{
             valid:true
         }
     });
-
     const {aboutToSave}=props;
 
     const inputChangedHandler=(event, controlName)=>{
@@ -87,7 +86,11 @@ const Auth=props=>{
         });
     }
 
-    let form=formElementsArray.map(formElement=>{
+    let refs=useRef([]);
+    refs.current=formElementsArray.map(
+        (_,index)=>refs.current[index]=React.createRef()
+    );  
+    let form=formElementsArray.map((formElement,index)=>{
         return <Input 
             key={formElement.id}
             elementType={formElement.config.elementType}
@@ -96,8 +99,28 @@ const Auth=props=>{
             invalid={!formElement.config.valid}
             shouldValidate={formElement.config.validation}
             touched={formElement.config.touched}
-            changed={(event)=>inputChangedHandler(event,formElement.id)} />
+            changed={(event)=>inputChangedHandler(event,formElement.id)} 
+            ref={refs.current[index]}/>
     });
+    
+    useEffect(()=>{
+        refs.current[0].current.focus();
+        refs.current[1].current.disabled=true;
+        refs.current[1].current.placeholder="Password - Text a Mail first!";
+    },[]);
+    
+    useEffect(()=>{
+        const userInput=document.querySelector('input');
+        const val=userInput.value;
+        if(val===refs.current[0].current.value && authForm.email.valid===true){
+            refs.current[1].current.disabled=false;
+        }else{
+            refs.current[1].current.value="";
+            refs.current[1].current.placeholder="Password - Text a Mail first!";
+            refs.current[1].current.disabled=true;
+        }
+    },[refs, authForm]);
+
 
     if(props.loading){form=<Spinner/>;}
 
