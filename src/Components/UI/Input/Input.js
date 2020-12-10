@@ -20,7 +20,8 @@ const Input = React.forwardRef((props,ref) =>{
                 <select
                     className={inputClasses.join(' ')}
                     value={props.value}
-                    onChange={props.changed}>
+                    onChange={props.changed}
+                    ref={ref}>
                     {props.elementConfig.options.map(option => (
                         <option key={option.value} value={option.value}>
                             {option.displayValue}

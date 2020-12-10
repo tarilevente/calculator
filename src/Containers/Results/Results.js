@@ -8,7 +8,7 @@ import Hide from '../../Components/UI/Hide/Hide';
 
 import  {connect} from 'react-redux';
 import * as actions from '../../Store/Actions/index';
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import * as actionTypes from '../../Store/Actions/ActionTypes';
 
 const Results=props=>{
@@ -30,14 +30,14 @@ const Results=props=>{
     if(!loading && !error){
         res=results.map(r=>{
             return(
-                <Link to={`/result/${r.id}`} key={r.id} >
+                <NavLink to={`/result/${r.id}`} key={r.id}>
                     <Result 
                         {...props}
                         date={r.date}
                         result={r.result}
                         clicked={()=>selectedHandler(r.id)}
                         id={r.id}/>
-                </Link>
+                </NavLink>
             );
         });
     };

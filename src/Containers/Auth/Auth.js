@@ -11,9 +11,7 @@ import Spinner from '../../Components/UI/Spinner/Spinner';
 import * as actions from '../../Store/Actions/index';
 
 const Auth=props=>{
-    let mainMethod='Login';
-    if(props.aboutToSave){mainMethod='SignUp';}
-
+    const  [mainMethod, setMainMethod]=useState('Login');
     const [authForm,setAuthForm]=useState({
         email:{
             elementType:'input',
@@ -57,7 +55,7 @@ const Auth=props=>{
         }
     });
     const {aboutToSave}=props;
-
+    if(props.aboutToSave){setMainMethod('SignUp');}
     const inputChangedHandler=(event, controlName)=>{
         const updatedControls=updateObject(authForm,{
             [controlName]:updateObject(authForm[controlName],{
@@ -71,9 +69,9 @@ const Auth=props=>{
 
     const submitHandler=(event)=>{
         event.preventDefault();
-        if(authForm.registration.value==='Login'){
+        if(refs.current[2].current.value==='Login'){
             props.onAuth(authForm.email.value, authForm.password.value,false);
-        }else if(authForm.registration.value==='SignUp'){
+        }else if(refs.current[2].current.value==='SignUp'){
             props.onAuth(authForm.email.value, authForm.password.value,true);
         }
     };
@@ -107,6 +105,7 @@ const Auth=props=>{
         refs.current[0].current.focus();
         refs.current[1].current.disabled=true;
         refs.current[1].current.placeholder="Password - Text a Mail first!";
+        setMainMethod(refs.current[2].current.value);
     },[]);
     
     useEffect(()=>{

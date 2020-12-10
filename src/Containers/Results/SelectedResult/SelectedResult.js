@@ -17,7 +17,7 @@ const SelectedResult=props=>{
                 <h1>Result: {selectedResult.result}</h1>
                 <div className={classes.ButtonDiv}>
                     <NavigationItem 
-                        link={props.match.url+'/data/date'}
+                        link={{pathname:props.match.url+'/data/date', search:'TEST_SEARCH', hash:'TEST_HASH'}} //see on props.location.search/hash
                         exact={true} >Date</NavigationItem>
                     <NavigationItem 
                         link={props.match.url+'/data/time'} 
